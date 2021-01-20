@@ -6,6 +6,7 @@
  */
 
 import { Request } from 'express';
+import { CaloriesData } from './types';
 
 /**
  * Extract a specific parameter from the query-string
@@ -79,6 +80,35 @@ export const getIdParameter: (req: Request) => number | false = (
   }
 };
 
+export const getUsernameFromRequest: (req: Request) => string | false = (
+  req
+) => {
+  let value = req.params.username;
+
+  if (typeof value !== 'string') {
+    return false;
+  }
+
+  return value;
+};
+
+export const getActivityFactor: (req: Request) => string | false = (
+  req
+) => {
+  let value = req.query["activityFactor"];
+  try {
+    let result = String(value);
+    if(result !== "none" && result !== "light" && result !== "moderate" && result !== "very" && result !== "extra"){
+      result = "moderate";
+    }
+    return result;
+  } catch (e) {
+    console.error(`Error extracting parameter activityFactor:`, e);
+    return false;
+  }
+};
+
+
 /**
  * Get a parameter from the query
  * @param req The request (as given in the controller)
@@ -99,6 +129,21 @@ export const getParameterFromRequest: (req: Request, param: string) => string | 
   }
 };
 
+export const getSexParameterFromRequest: (req: Request) => string | false = (
+  req
+) => {
+  let value = req.query["sex"];
+  try {
+    let result = String(value);
+    if(result !== "m" && result !== "f"){
+      result = "m";
+    }
+    return result;
+  } catch (e) {
+    console.error(`Error extracting "sex" parameter :`, e);
+    return false;
+  }
+};
 
 /**
  * Extract id from the request query-string
@@ -109,3 +154,29 @@ export const getParameterFromRequest: (req: Request, param: string) => string | 
 export const getIdFromRequest: (req: Request) => number | false = (req) => {
   return getNumberFromRequest(req, 'id');
 };
+
+function computeBMR(data: CaloriesData) {
+  let result = 10 * data.weight + (6.25 * data.height) - 5 * data.age + 5;
+  if(data.sex == "m"){
+    result += 5;
+  }else{
+    result -= 161;
+  }
+  return result;
+}
+
+export const computeNeededCalories: (data: CaloriesData) => number = (data) => {
+  const BMR = computeBMR(data);
+  if(data.activityFactor == "none")
+    return BMR * 1.2;
+  else if(data.activityFactor == "light")
+    return BMR * 1.375;
+  else if(data.activityFactor == "moderate")
+    return BMR * 1.55;
+  else if(data.activityFactor == "very")
+    return BMR * 1.725;
+  else if(data.activityFactor == "extra")
+    return BMR * 1.9;
+  else 
+    return 0;
+}

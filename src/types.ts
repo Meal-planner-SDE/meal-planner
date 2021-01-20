@@ -8,13 +8,17 @@ export interface Error {
 }
 
 export interface MPUser {
-  mp_user_id: number;
-  username: string;
-  height: number;
-  weight: number;
-  diet_type: string;
-  address: string;
-  shopping_list_id: number;
+  mp_user_id: number,
+  username: string,
+  height: number,
+  weight: number,
+  sex: string,
+  birth_year: number,
+  diet_type: string,
+  activity_factor: string,
+  address: string,
+  shopping_list_id: number,
+  current_weekly_plan_id: number
 }
 
 export interface MeasureRaw {
@@ -133,10 +137,10 @@ export interface IngredientRaw {
   categoryPath: string[];
 }
 
-export interface Amount {
-  sourceAmount: number,
-  sourceUnit: string,
-  targetAmount: number,
-  targetUnit: string,
-  answer: string
+export interface CaloriesData {
+  height: number,
+  weight: number,
+  age: number,
+  sex: string,
+  activityFactor: string
 }

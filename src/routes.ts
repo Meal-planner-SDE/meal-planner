@@ -11,18 +11,19 @@
 
 import express from 'express';
 import {
-  recipe,
-  recipeInformation,
-  ingredient,
-  convert
+  user,
+  postUser,
+  patchUser,
+  calories
 } from './controller';
 
 const router = express.Router();
 
-router.get('/recipe', recipe);
-router.get('/recipe/:id', recipeInformation);
+router.get('/users/:username', user);
+router.post('/users', postUser);
+router.patch('/users/:id', patchUser);
 
-router.get('/ingredient/:id', ingredient);
-router.get('/convert', convert);
+router.get('/calories', calories);
+
 
 export default router;

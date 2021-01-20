@@ -1,4 +1,4 @@
 export default {
-  SPOONACULAR_API_ENDPOINT: 'https://api.spoonacular.com',
-  SPOONACULAR_KEY: '249d41c2cb624364ae3c633b7e792ac0'
+    INTERNAL_DB_ADAPTER_URL: 'https://meal-plan-sde-db-adapter.herokuapp.com',
+    SPOONACULAR_ADAPTER_URL: 'https://meal-plan-sde-spoon-adapter.herokuapp.com'
 }
