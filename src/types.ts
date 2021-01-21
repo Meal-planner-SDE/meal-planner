@@ -21,54 +21,76 @@ export interface MPUser {
   current_weekly_plan_id: number
 }
 
-export interface MeasureRaw {
+export interface CaloriesData {
+  height: number,
+  weight: number,
+  age: number,
+  sex: string,
+  activityFactor: string
+}
+
+export interface Recipe {
+  recipe_id: number;
+}
+
+export interface DailyPlan {
+  recipes: SpoonacularRecipe[],
+}
+
+export interface MealPlan {
+  daily_calories: number,
+  diet_type: string,
+  daily_plans: DailyPlan[]
+}
+
+export interface SpoonacularMeasureRaw {
   amount: number,
   unitLong: string,
   unitShort: string
 }
 
-export class Measure {
+export class SpoonacularMeasure {
   amount: number;
   unitLong: string;
   unitShort: string;
 
-  constructor(measure: MeasureRaw){
+  constructor(measure: SpoonacularMeasureRaw){
     this.amount = measure.amount;
     this.unitLong = measure.unitLong;
     this.unitShort = measure.unitShort;
   }
 }
 
-export class RecipeIngredient {
+export class SpoonacularRecipeIngredient {
   id: number;
   name: string;
   measures: {
-    metric: Measure
+    metric: SpoonacularMeasure
   };
 
-  constructor(rec_ingredient: RecipeIngredientRaw){
+  constructor(rec_ingredient: SpoonacularRecipeIngredientRaw){
     this.id = rec_ingredient.id;
     this.name = rec_ingredient.name;
     this.measures = {
-      metric : new Measure(rec_ingredient.measures.metric)
+      metric : new SpoonacularMeasure(rec_ingredient.measures.metric)
     };
   }
 }
 
-export interface RecipeIngredientRaw {
+export interface SpoonacularRecipeIngredientRaw {
   id: number,
   name: string,
   measures: {
-    metric: MeasureRaw
+    metric: SpoonacularMeasureRaw
   }
 }
 
-export class Recipe {
+export class SpoonacularRecipe {
   id: number;
   title: string;
   image: string;
   imageType: string;
-  ingredients: RecipeIngredient[];
+  ingredients: SpoonacularRecipeIngredient[];
   summary: string;
   sourceUrl: string;
   servings: number;
@@ -79,7 +101,7 @@ export class Recipe {
   vegetarian: boolean;
   instructions: string;
 
-  constructor(recipe: RecipeRaw){
+  constructor(recipe: SpoonacularRecipeRaw){
     this.id = recipe.id;
     this.title = recipe.title;
     this.image = recipe.image;
@@ -96,18 +118,18 @@ export class Recipe {
     this.ingredients = [];
     if(recipe.extendedIngredients !== undefined){
       for (const ingredient of recipe.extendedIngredients){
-        this.ingredients.push(new RecipeIngredient(ingredient));
+        this.ingredients.push(new SpoonacularRecipeIngredient(ingredient));
       }
     }
   }
 }
 
-export interface RecipeRaw {
+export interface SpoonacularRecipeRaw {
   id: number,
   title: string,
   image: string,
   imageType: string,
-  extendedIngredients: RecipeIngredientRaw[],
+  extendedIngredients: SpoonacularRecipeIngredientRaw[],
   summary: string,
   sourceUrl: string,
   servings: number,
@@ -119,28 +141,28 @@ export interface RecipeRaw {
   instructions: string
 }
 
-export class Ingredient {
+export class SpoonacularIngredient {
   id: number;
   name: string;
   categoryPath: string[];
 
-  constructor(ingredient: IngredientRaw){
+  constructor(ingredient: SpoonacularIngredientRaw){
     this.id = ingredient.id;
     this.name = ingredient.name;
     this.categoryPath = ingredient.categoryPath;
   }
 }
 
-export interface IngredientRaw {
+export interface SpoonacularIngredientRaw {
   id: number;
   name: string;
   categoryPath: string[];
 }
 
-export interface CaloriesData {
-  height: number,
-  weight: number,
-  age: number,
-  sex: string,
-  activityFactor: string
+export interface SpoonacularAmount {
+  sourceAmount: number,
+  sourceUnit: string,
+  targetAmount: number,
+  targetUnit: string,
+  answer: string
 }

@@ -51,7 +51,8 @@ export const getNumberFromRequest: (req: Request, param: string) => number | fal
   }
 
   try {
-    return parseInt(value);
+    const result = parseInt(value);
+    return isNaN(result) ? false : result;
   } catch (e) {
     console.error(`Error extracting parameter ${param}:`, e);
     return false;
@@ -63,10 +64,11 @@ export const getNumberFromRequest: (req: Request, param: string) => number | fal
  * @param req The request (as given in the controller)
  * @return the id if it is correct and available, false otherwise
  */
-export const getIdParameter: (req: Request) => number | false = (
-  req
+export const getNumberParameter: (req: Request, parameter: string) => number | false = (
+  req,
+  parameter
 ) => {
-  let value = req.params.id;
+  let value = req.params[parameter];
 
   if (typeof value !== 'string') {
     return false;
@@ -80,11 +82,11 @@ export const getIdParameter: (req: Request) => number | false = (
   }
 };
 
-export const getUsernameFromRequest: (req: Request) => string | false = (
-  req
+export const getStringParameter: (req: Request, parameter: string) => string | false = (
+  req,
+  parameter
 ) => {
-  let value = req.params.username;
-
+  let value = req.params[parameter];
   if (typeof value !== 'string') {
     return false;
   }
@@ -104,6 +106,22 @@ export const getActivityFactor: (req: Request) => string | false = (
     return result;
   } catch (e) {
     console.error(`Error extracting parameter activityFactor:`, e);
+    return false;
+  }
+};
+
+export const getDietType: (req: Request) => string | false = (
+  req
+) => {
+  let value = req.query["diet"];
+  try {
+    let result = String(value);
+    if(result !== "omni" && result !== "vegan" && result !== "vegetarian" && result !== "glutenFree"){
+      result = "omni";
+    }
+    return result;
+  } catch (e) {
+    console.error(`Error extracting parameter diet:`, e);
     return false;
   }
 };

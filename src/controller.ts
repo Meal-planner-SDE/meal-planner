@@ -15,21 +15,31 @@ import {
   getUserByUsername,
   insertUser,
   updateUser,
-  computeCalories
+  computeCalories,
+  getMealPlans,
+  getMealPlanById,
+  generateMealPlan
 } from './core';
 import {
   getActivityFactor,
-  getIdParameter,
+  getDietType,
   getNumberFromRequest,
+  getNumberParameter,
+  getNumberParameterFromRequest,
   getParameterFromRequest,
   getSexParameterFromRequest,
-  getUsernameFromRequest
+  getStringParameter
 } from './helper';
 import { CaloriesData } from './types';
 
 export const user = async (req: Request, res: Response) => {
-  const username = getUsernameFromRequest(req) || "";
-  res.send(await getUserByUsername(username));
+  const username = getStringParameter(req, 'username');
+  if(username !== false){
+    res.send(await getUserByUsername(username));
+  } else {
+    res.status(400);
+    res.send({"error" : "Invalid username format."});
+  }
 };
 
 export const postUser = async (req: Request, res: Response) => {
@@ -37,55 +47,70 @@ export const postUser = async (req: Request, res: Response) => {
 };
 
 export const patchUser = async (req: Request, res: Response) => {
-  const id = getIdParameter(req) || -1;
-  res.send(await updateUser(id, req.body));
+  const id = getNumberParameter(req, 'userId');
+  if(id !== false){
+    res.send(await updateUser(id, req.body));
+  } else {
+    res.status(400);
+    res.send({"error" : "Invalid id format."});
+  }
 };
 
 export const calories = async (req: Request, res: Response) => {
-  const caloriesData:CaloriesData = {
-    height: getNumberFromRequest(req, 'height') || 0,
-    weight: getNumberFromRequest(req, 'weight') || 0,
-    age: getNumberFromRequest(req, 'age')       || 0,
-    sex: getSexParameterFromRequest(req)        || "m",
-    activityFactor: getActivityFactor(req)      || "moderate"
+  const height = getNumberFromRequest(req, 'height');
+  const weight = getNumberFromRequest(req, 'weight');
+  const age = getNumberFromRequest(req, 'age');
+  const sex = getSexParameterFromRequest(req);
+  const activityFactor = getActivityFactor(req);
+  if(height !== false && weight !== false && age !== false && sex !== false && activityFactor !== false){
+      const caloriesData:CaloriesData = {
+        height: height,
+        weight: weight,
+        age: age,
+        sex: sex,
+        activityFactor: activityFactor
+      }
+      res.send(await computeCalories(caloriesData));
+  }else{
+    res.status(400);
+    res.send({ error: 'height, weight, age, sex and activityFactor are required.' });
   }
-  res.send(await computeCalories(caloriesData));
 };
 
+export const mealPlans = async (req: Request, res: Response) => {
+  const userId = getNumberParameter(req, 'userId');
 
+  if(userId !== false){
+    res.send(await getMealPlans(userId));
+  } else {
+    res.status(400);
+    res.send({"error": "Invalid userId format."});
+  }
+};
 
-// export const recipe = async (req: Request, res: Response) => {
-//   const query = getParameterFromRequest(req, 'q')     || "";
-//   const diet = getParameterFromRequest(req, 'diet')   || "omni";
-//   const n = getNumberFromRequest(req, 'n')            || 1;
-//   const offset = getNumberFromRequest(req, 'offset')  || 0;
-//   res.send(await searchRecipes(query, diet, n, offset));
-// };
+export const mealPlanById = async (req: Request, res: Response) => {
+  const userId = getNumberParameter(req, 'userId');
+  const mealPlanId = getNumberParameter(req, 'mealPlanId');
 
-// export const recipeInformation = async (req: Request, res: Response) => {
-//   let id = getIdParameter(req);
-//   if (id !== false) {
-//     res.send(await getRecipeInformation(id));
-//   } else {
-//     res.status(400);
-//     res.send({ error: 'Invalid ID format!' });
-//   }
-// };
+  if(userId !== false && mealPlanId !== false){
+    res.send(await getMealPlanById(userId, mealPlanId));
+  } else {
+    res.status(400);
+    res.send({"error": "Invalid userId or mealPlanId format."});
+  }
+};
 
-// export const ingredient = async (req: Request, res: Response) => {
-//   let id = getIdParameter(req);
-//   if (id !== false) {
-//     res.send(await getIngredientById(id));
-//   } else {
-//     res.status(400);
-//     res.send({ error: 'Invalid ID format!' });
-//   }
-// };
+export const createMealPlan = async (req: Request, res: Response) => {
+  const calories = getNumberFromRequest(req, 'calories');
+  const days = getNumberFromRequest(req, 'n');
+  const mealsPerDay = getNumberFromRequest(req, 'm');
+  const dietType = getDietType(req);
 
-// export const convert = async (req: Request, res: Response) => {
-//   const ingredientName = getParameterFromRequest(req, 'ingredientName') || "";
-//   const sourceAmount = getNumberFromRequest(req, 'sourceAmount')        || 1;
-//   const sourceUnit = getParameterFromRequest(req, 'sourceUnit')         || "g";
-//   const targetUnit = getParameterFromRequest(req, 'targetUnit')         || "g";
-//   res.send(await convertAmount(ingredientName, sourceAmount, sourceUnit, targetUnit));
-// };
+  console.log(calories, days, mealsPerDay, dietType);
+  if(calories !== false && days !== false && mealsPerDay !== false && dietType!== false){
+    res.send(await generateMealPlan(calories, days, mealsPerDay, dietType));
+  } else {
+    res.status(400);
+    res.send({"error": "Parameters calories, n, m and dietType are required."});
+  }
+};
