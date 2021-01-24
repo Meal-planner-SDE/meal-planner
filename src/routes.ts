@@ -34,7 +34,4 @@ router.get('/users/:userId/mealPlans/:mealPlanId', mealPlanById);
 
 router.get('/mealPlans', createMealPlan);
 
-
-
-
 export default router;
