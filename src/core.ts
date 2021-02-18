@@ -94,6 +94,7 @@ export const generateMealPlan: (calories: number, days: number, mealsPerDay: num
         n: totalRecipes
       }
     });
+    
     let k=0;
     let dailyPlans:DailyPlan[] = [];
     for(let i=0; i<days; i++){
@@ -120,5 +121,18 @@ export const generateMealPlan: (calories: number, days: number, mealsPerDay: num
     };
   }
 };
+
+export const savePlan: (id : number, plan : MealPlan) => Promise<MealPlan | Error> = async (id, plan) => {
+  try {
+    const response = await axios.post<MealPlan>(`${config.INTERNAL_DB_ADAPTER_URL}/users/${id}/mealPlans`, plan);
+    return response.data;
+  } catch (e) {
+    console.error(e);
+    return {
+      error: e.toString(),
+    };
+  }
+};
+
 
 

@@ -18,7 +18,8 @@ import {
   computeCalories,
   getMealPlans,
   getMealPlanById,
-  generateMealPlan
+  generateMealPlan,
+  savePlan
 } from './core';
 import {
   getActivityFactor,
@@ -112,5 +113,15 @@ export const createMealPlan = async (req: Request, res: Response) => {
   } else {
     res.status(400);
     res.send({"error": "Parameters calories, n, m and dietType are required."});
+  }
+};
+
+export const saveMealPlan = async (req: Request, res: Response) => {
+  const id = getNumberParameter(req, 'userId');
+  if(id !== false){
+    res.send(await savePlan(id, req.body));
+  } else {
+    res.status(400);
+    res.send({"error": "Invalid userId format."});
   }
 };

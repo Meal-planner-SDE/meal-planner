@@ -86,7 +86,7 @@ export interface SpoonacularRecipeIngredientRaw {
 }
 
 export class SpoonacularRecipe {
-  id: number;
+  recipe_id: number;
   title: string;
   image: string;
   imageType: string;
@@ -102,7 +102,7 @@ export class SpoonacularRecipe {
   instructions: string;
 
   constructor(recipe: SpoonacularRecipeRaw){
-    this.id = recipe.id;
+    this.recipe_id = recipe.id;
     this.title = recipe.title;
     this.image = recipe.image;
     this.imageType = recipe.imageType;

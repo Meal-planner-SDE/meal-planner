@@ -17,7 +17,8 @@ import {
   calories,
   mealPlans,
   mealPlanById,
-  createMealPlan
+  createMealPlan,
+  saveMealPlan
 } from './controller';
 
 const router = express.Router();
@@ -33,5 +34,6 @@ router.get('/users/:userId/mealPlans/:mealPlanId', mealPlanById);
 // router.post('/users/:userId/mealPlans', saveMealPlan);
 
 router.get('/mealPlans', createMealPlan);
+router.post('/mealPlans/:userId', saveMealPlan);
 
 export default router;
