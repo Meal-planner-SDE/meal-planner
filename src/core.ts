@@ -57,7 +57,7 @@ export const updateUser: (id: number, user : MPUser) => Promise<MPUser | Error> 
   }
 };
 
-export const computeCalories: (data: CaloriesData) => Promise<Object | Error> = async (data) => {
+export const computeCalories: (data: CaloriesData) => Promise<Object> = async (data) => {
   return {neededCalories: computeNeededCalories(data)};
 };
 
