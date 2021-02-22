@@ -103,6 +103,7 @@ export class SpoonacularRecipe {
   vegan: boolean;
   vegetarian: boolean;
   instructions: string;
+  calories: number;
 
   constructor(recipe: SpoonacularRecipeRaw){
     this.recipe_id = recipe.id;
@@ -119,6 +120,7 @@ export class SpoonacularRecipe {
     this.vegetarian = recipe.vegetarian;
     this.instructions = recipe.instructions;
     this.ingredients = [];
+    this.calories = recipe.calories;
     if(recipe.extendedIngredients !== undefined){
       for (const ingredient of recipe.extendedIngredients){
         this.ingredients.push(new SpoonacularRecipeIngredient(ingredient));
@@ -142,6 +144,7 @@ export interface SpoonacularRecipeRaw {
   vegan: boolean,
   vegetarian: boolean,
   instructions: string
+  calories: number;
 }
 
 export class SpoonacularIngredient {
