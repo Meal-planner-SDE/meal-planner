@@ -95,8 +95,8 @@ function shuffle(a: any[]) {
 
 const computeMealPlan: (calories: number, days: number, mealsPerDay: number, dietType: string) => Promise<MealPlan | Error> = 
   async (calories, days, mealsPerDay, dietType) => {
-  const N = 100;
-  const MAX_DIFF = 0.1 * calories;
+  const N = 30;
+  const MAX_DIFF = 0.15 * calories;
   const MAX_OFFSET = 20;
   const totalRecipes = days * mealsPerDay * N;
   let response = await axios.get<SpoonacularRecipeRaw[]>(`${config.SPOONACULAR_ADAPTER_URL}/recipe`, {
