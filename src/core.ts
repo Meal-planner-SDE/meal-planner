@@ -158,7 +158,7 @@ const computeMealPlan: (calories: number, days: number, mealsPerDay: number, die
   }
 
   let result:MealPlan = {
-    daily_calories: sum_calories / Math.max(1, days),
+    daily_calories: Math.floor(sum_calories / Math.max(1, days)),
     diet_type: dietType,
     daily_plans: dailyPlans
   };

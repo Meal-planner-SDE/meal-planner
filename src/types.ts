@@ -106,7 +106,7 @@ export class SpoonacularRecipe {
   calories: number;
 
   constructor(recipe: SpoonacularRecipeRaw){
-    this.recipe_id = recipe.id;
+    this.recipe_id = recipe.recipe_id;
     this.title = recipe.title;
     this.image = recipe.image;
     this.imageType = recipe.imageType;
@@ -130,7 +130,7 @@ export class SpoonacularRecipe {
 }
 
 export interface SpoonacularRecipeRaw {
-  id: number,
+  recipe_id: number,
   title: string,
   image: string,
   imageType: string,
